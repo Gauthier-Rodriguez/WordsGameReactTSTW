@@ -87,10 +87,10 @@ const Game = () => {
     
       <>
          
-          <div className='flex flex-col justify-around h-4/6 font-pixel mt-44 fixed'> 
+          <div className='flex flex-col justify-around h-4/6 font-pixel'> 
             
-            <div className='flex justify-center gap-40 text-gray-200 '>
-              <div className=''>
+            <div className='flex justify-center gap-40 text-gray-200 fixed inset-y-1/2 inset-x-1/2'>
+              <div>
                 <h1 className='text-4xl'> You </h1>
                 <ul className='text-xl mt-6'>
                 {p2wordToDisplay.map((word, index) => {
@@ -109,8 +109,8 @@ const Game = () => {
               </div>
             </div>
 
-            <form className='flex flex-col gap-5'>
-              <input type="text" value={word} placeholder="Your word..." className="w-6/12 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
+            <form className='flex flex-col items-center gap-5'>
+              <input type="text" value={word} placeholder="Your word..." className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
                onChange={(e) => {
                 setWord(e.target.value);
               }}/>
