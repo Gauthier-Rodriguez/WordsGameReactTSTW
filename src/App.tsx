@@ -1,3 +1,4 @@
+import Countdown from './Components/Count/Count';
 import Home from './Components/Home/Home';
 
 const App = () => {

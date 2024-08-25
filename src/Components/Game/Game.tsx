@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Count from '../Count/Count';
 import WinAnim from '../WinAnim/WinAnim';
+import { useRef } from 'react';
 
 
 const Game = () => {
@@ -13,6 +14,7 @@ const Game = () => {
   const [p1word, setP1word] = useState<string[]>([]);
   const [winner, setWinner] = useState(true);
   const [gameWon, setGameWon] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const compareWords = (word1: string, word2: string) => {
     if (word1.toUpperCase() === word2.toUpperCase()) {
@@ -37,8 +39,15 @@ const Game = () => {
     if(!winner){
       setTimeout(() => {
         setWinner(true);
+        if(inputRef.current){
+          inputRef.current.focus();
+        }
       }, 3000);
+      if(inputRef.current) {
+        inputRef.current.blur();
+      }
       return <Count/>;
+
     }
     return null;
   };
@@ -56,7 +65,11 @@ const Game = () => {
     const handleGameLogic = () => {
       if (p1word.length > 0 && p2word.length > 0 && p1word.length === p2word.length) {
         if (compareWords(p2word[p2word.length-1], p1word[p1word.length - 1])) {
+          if (inputRef.current) {
+            inputRef.current.blur();
+          }
           setGameWon(true);
+          
         } else {
           setp2wordToDisplay(p2word);
           setWinner(false);
@@ -110,8 +123,12 @@ const Game = () => {
             </div>
 
             <form className='flex flex-col items-center gap-5'>
-              <input type="text" value={word} placeholder="Your word..." className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
-               onChange={(e) => {
+              <input type="text"
+              ref={inputRef} 
+              value={word} 
+              placeholder="My word..." 
+              className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
+              onChange={(e) => {
                 setWord(e.target.value);
               }}/>
 
