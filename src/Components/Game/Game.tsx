@@ -102,10 +102,10 @@ const Game = () => {
          
           <div className='flex flex-col justify-around h-4/6 font-pixel'> 
             
-            <div className='flex justify-center gap-40 text-gray-200 fixed inset-y-1/2 inset-x-1/2'>
+            <div className='flex justify-center gap-10 text-gray-200 fixed inset-y-1/2 inset-x-1/2'>
               <div>
-                <h1 className='text-4xl'> You </h1>
-                <ul className='text-xl mt-6'>
+                <h1 className='text-4xl text-center'> You </h1>
+                <ul className='text-xs mt-6 text-left'>
                 {p2wordToDisplay.map((word, index) => {
                   return <li  key={index}>{word}</li>
                 })}
@@ -113,8 +113,8 @@ const Game = () => {
               </div>
 
               <div>
-                <h1 className='text-4xl'> Me </h1>
-                <ul className='text-xl mt-6'>
+                <h1 className='text-4xl text-center'> Me </h1>
+                <ul className='text-xs mt-6 text-right'>
                   {p1word.map((word, index) => {
                   return <li key={index}>{word}</li>
                 })}
