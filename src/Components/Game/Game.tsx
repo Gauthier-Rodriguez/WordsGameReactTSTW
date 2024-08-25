@@ -87,7 +87,7 @@ const Game = () => {
     
       <>
          
-          <div className='flex flex-col justify-around h-4/6 font-pixel'> 
+          <div className='flex flex-col justify-around h-4/6 font-pixel mt-44'> 
             
             <div className='flex justify-center gap-40 text-gray-200 '>
               <div className=''>
