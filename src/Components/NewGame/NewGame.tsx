@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import Game from '../Game/Game';
+
 
 type NewGameProps = {
   setGame: React.Dispatch<React.SetStateAction<boolean>>;

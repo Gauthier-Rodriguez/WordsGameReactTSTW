@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Game from '../Game/Game';
 
 const startGame = () => {
   console.log('Game Started!');

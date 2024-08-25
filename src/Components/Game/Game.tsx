@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-const socket = io('http://localhost:3000');
+const socket = io('https://wgservernodejs.onrender.com');
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Count from '../Count/Count';

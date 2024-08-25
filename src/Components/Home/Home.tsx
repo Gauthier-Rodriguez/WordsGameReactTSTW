@@ -1,6 +1,3 @@
-import io from 'socket.io-client';
-const socket = io('http://localhost:3000');
-import { useEffect } from 'react';
 import { useState } from 'react';
 import Game from '../Game/Game';
 import NewGame from '../NewGame/NewGame';
