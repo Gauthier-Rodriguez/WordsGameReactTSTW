@@ -15,24 +15,48 @@ const Game = () => {
   const [winner, setWinner] = useState(true);
   const [gameWon, setGameWon] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const compareWords = (word1: string, word2: string) => {
+
     if (word1.toUpperCase() === word2.toUpperCase()) {
       return true;
     }
     return false;
   }
+  const deleteSpace = (word: string) => {
+    let newWord = word;
+    while (newWord.charAt(newWord.length - 1) === ' ') {
+      newWord = newWord.slice(0, newWord.length - 1);
+    }
+    return newWord;
+  }
   
+  const errorAlert = (code : string) => {
+    if (code === 'wait') {
+      setErrorMessage('Wait for your opponent');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 2000);
+    }
+  }
+
   const submitWord = (e : React.FormEvent) => {
     e.preventDefault();
-    socket.emit('word', word);
-    if(p1word.length > 0){
-    setP1word((prev) => [...prev, word]);
+    if ( p1word.length <= p2word.length) {
+      socket.emit('word', word);
+      if(p1word.length > 0){
+        setP1word((prev) => [...prev, word]);
+      }
+      else{
+        setP1word([word]);
+      }
+      setWord('');
     }
-    else{
-      setP1word([word]);
+    else {
+      errorAlert('wait');
+      setWord('');
     }
-    setWord('');
   }
 
   const startCountdown = () => {  
@@ -64,7 +88,7 @@ const Game = () => {
 
     const handleGameLogic = () => {
       if (p1word.length > 0 && p2word.length > 0 && p1word.length === p2word.length) {
-        if (compareWords(p2word[p2word.length-1], p1word[p1word.length - 1])) {
+        if (compareWords(deleteSpace(p2word[p2word.length-1]), deleteSpace(p1word[p1word.length - 1]))) {
           if (inputRef.current) {
             inputRef.current.blur();
           }
@@ -102,22 +126,18 @@ const Game = () => {
          
           <div className='flex flex-col justify-around h-4/6 font-pixel'> 
             
-            <div className='flex justify-center gap-10 text-gray-200 fixed inset-y-1/2 inset-x-1/2'>
-              <div>
+            <div className='w-screen flex justify-center gap-10 text-gray-200 fixed inset-x-0 bottom-1/3'>
+              <div className='w-6/12 pl-5'>
                 <h1 className='text-4xl text-center'> You </h1>
                 <ul className='text-xs mt-6 text-left'>
-                {p2wordToDisplay.map((word, index) => {
-                  return <li  key={index}>{word}</li>
-                })}
+                {p2wordToDisplay[p2wordToDisplay.length - 1] && <li>{p2wordToDisplay[p2wordToDisplay.length - 1]}</li>}
                 </ul>
               </div>
 
-              <div>
+              <div className='w-6/12 pr-5'>
                 <h1 className='text-4xl text-center'> Me </h1>
                 <ul className='text-xs mt-6 text-right'>
-                  {p1word.map((word, index) => {
-                  return <li key={index}>{word}</li>
-                })}
+                  {p1word[p1word.length - 1] && <li>{p1word[p1word.length - 1]}</li>}
                 </ul>
               </div>
             </div>
@@ -127,7 +147,7 @@ const Game = () => {
               ref={inputRef} 
               value={word} 
               placeholder="My word..." 
-              className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
+              className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:gray-500" required
               onChange={(e) => {
                 setWord(e.target.value);
               }}/>
@@ -140,6 +160,11 @@ const Game = () => {
             </form>
           
           </div>
+          {errorMessage != '' && 
+            <div className='absolute flex justify-center items-end h-screen w-screen bg-gray-900'>
+              <h1 className='text-white text-center text-xl font-pixel py-32'>{errorMessage}</h1>
+            </div>}
+          
           
           {startCountdown()}
           {setWinAnim()}
