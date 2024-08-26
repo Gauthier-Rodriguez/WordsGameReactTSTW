@@ -1,13 +1,17 @@
 import io from 'socket.io-client';
-const socket = io('https://wgservernodejs.onrender.com');
+/* const socket = io('https://wgservernodejs.onrender.com'); */
+const socket = io('localhost:3000');
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Count from '../Count/Count';
 import WinAnim from '../WinAnim/WinAnim';
 import { useRef } from 'react';
 
+interface GameProps {
+  roomNumber: number;
+}
 
-const Game = () => {
+const Game = ({roomNumber} : GameProps) => {
   const [word, setWord] = useState('');
   const [p2word, setP2word] = useState<string[]>([]);
   const [p2wordToDisplay, setp2wordToDisplay] = useState<string[]>([]);
@@ -16,6 +20,12 @@ const Game = () => {
   const [gameWon, setGameWon] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const joinRoom = () => {
+    if (roomNumber !== undefined) {
+      socket.emit('joinRoom', roomNumber);     
+    }
+  }
 
   const compareWords = (word1: string, word2: string) => {
 
@@ -44,7 +54,7 @@ const Game = () => {
   const submitWord = (e : React.FormEvent) => {
     e.preventDefault();
     if ( p1word.length <= p2word.length) {
-      socket.emit('word', word);
+      socket.emit('word', {word, roomNumber});
       if(p1word.length > 0){
         setP1word((prev) => [...prev, word]);
       }
@@ -118,6 +128,7 @@ const Game = () => {
     socket.on('p2_word', (word) => {
       setP2word((prev) => [...prev, word]);
     });
+    joinRoom();
   }, [socket]);
 
     return (
@@ -147,7 +158,7 @@ const Game = () => {
               ref={inputRef} 
               value={word} 
               placeholder="My word..." 
-              className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:gray-500" required
+              className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:gray-500 font-pixel" required
               onChange={(e) => {
                 setWord(e.target.value);
               }}/>
