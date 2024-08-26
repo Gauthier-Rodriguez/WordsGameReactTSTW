@@ -1,7 +1,7 @@
 import { useState } from "react";
 import io from 'socket.io-client';
-/* const socket = io('https://wgservernodejs.onrender.com'); */
-const socket = io('localhost:3000');
+const socket = io('https://wgservernodejs.onrender.com');
+/* const socket = io('localhost:3000'); */
 import Game from "../Game/Game";
 
 const Room = () => {
