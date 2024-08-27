@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import Game from '../Game/Game';
-import NewGame from '../NewGame/NewGame';
 import Room from '../Room/Room';
 
 
 const Home = () => {
-  const [game, setGame] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>('');
   const [nameChoosed, setNameChoosed] = useState<boolean>(false);
   const [wantToPlay, setWantToPlay] = useState<boolean>(false);
