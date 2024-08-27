@@ -3,7 +3,7 @@ import partyCat from '../../assets/cat.webp';
 const WinAnim = () => {
 
   return (
-      <div className="absolute h-screen w-screen flex flex-col items-center bg-gray-900">
+      <div className="absolute top-20 left-0 h-screen w-screen flex flex-col items-center bg-gray-900">
         <h1 className="text-4xl text-center text-white font-pixel pt-52 animate-bounce">You Won!</h1>
         <img
           src={partyCat} 

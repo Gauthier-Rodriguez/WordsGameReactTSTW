@@ -27,7 +27,7 @@ const Countdown = () => {
 
   return (
 
-    <div className='absolute flex justify-center items-center h-screen w-screen bg-gray-900'>
+    <div className='absolute top-24 left-0 flex justify-center items-center h-full w-full bg-gray-900 '>
       <div className='animate-bounce text-white text-9xl font-pixel'>{count}</div>         
     </div>
   );
