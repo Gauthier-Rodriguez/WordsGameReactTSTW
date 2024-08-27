@@ -89,7 +89,12 @@ const Game = ({roomNumber} : GameProps) => {
   const setWinAnim = () => {
     if(gameWon) {
       setTimeout(() => {
-        window.location.reload();
+        setGameWon(false);
+        setP1word([]);
+        setP2word([]);
+        setp2wordToDisplay([]);
+        setWord('');
+        //mount a component to reset the game
       }, 5000);
       return <WinAnim/>
     }
