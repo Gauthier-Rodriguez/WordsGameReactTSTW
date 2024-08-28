@@ -5,21 +5,25 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Count from '../Count/Count';
 import WinAnim from '../WinAnim/WinAnim';
+import PlayAgain from '../PlayAgain/PlayAgain';
 import { useRef } from 'react';
 
 interface GameProps {
   roomNumber: number;
+  userName: string;
 }
 
-const Game = ({roomNumber} : GameProps) => {
+const Game = ({roomNumber, userName} : GameProps) => {
   const [word, setWord] = useState('');
   const [p2word, setP2word] = useState<string[]>([]);
+  const [p1wordToDisplay, setP1wordToDisplay] = useState<string[]>([]);
   const [p2wordToDisplay, setp2wordToDisplay] = useState<string[]>([]);
   const [p1word, setP1word] = useState<string[]>([]);
   const [winner, setWinner] = useState(true);
   const [gameWon, setGameWon] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [wannaPlay, setWannaPlay] = useState(false);
 
   const joinRoom = () => {
     if (roomNumber !== undefined) {
@@ -88,20 +92,26 @@ const Game = ({roomNumber} : GameProps) => {
   
   const setWinAnim = () => {
     if(gameWon) {
-      setTimeout(() => {
-        setGameWon(false);
-        setP1word([]);
-        setP2word([]);
-        setp2wordToDisplay([]);
-        setWord('');
-        //mount a component to reset the game
-      }, 5000);
+     setTimeout(() => {
+      setGameWon(false);
+      setP1word([]);
+      setP2word([]);
+      setP1wordToDisplay([]);
+      setp2wordToDisplay([]);
+      setWannaPlay(true)}, 3000);
       return <WinAnim/>
     }
     return null;
   }
+  const setplayAgain = () => {
+    if(wannaPlay) {
+      
+      return <PlayAgain roomNumber={roomNumber as number} userName={userName as string} togglePlay={setWannaPlay}/>
+    }
+    return null;
+  }
 
-    const handleGameLogic = () => {
+  const handleGameLogic = () => {
       if (p1word.length > 0 && p2word.length > 0 && p1word.length === p2word.length) {
         if (compareWords(deleteSpace(p2word[p2word.length-1]), deleteSpace(p1word[p1word.length - 1]))) {
           if (inputRef.current) {
@@ -110,25 +120,33 @@ const Game = ({roomNumber} : GameProps) => {
           setGameWon(true);
           
         } else {
-          setp2wordToDisplay(p2word);
+          
+            if (p1word.length > 1) {
+             const words = [p1word[p1word.length - 2], p1word[p1word.length - 1]]
+             setP1wordToDisplay(words);
+            } else {
+              const words = p1word;
+              setP1wordToDisplay(words);
+            }
+          setp2wordToDisplay([p2word[p2word.length - 2], p2word[p2word.length - 1]]);
           setWinner(false);
         }
       }
-    };
-    useEffect(() => {
+  };
+
+  useEffect(() => {
+    setplayAgain();
+  }, [wannaPlay]);
+  useEffect(() => {
       console.log(gameWon);
-      WinAnim();
-    }, [gameWon]);
-
-    useEffect(() => {
+      setWinAnim();
+  }, [gameWon]);
+  useEffect(() => {
       startCountdown();
-    }, [winner]);
-
-    useEffect(() => {
+  }, [winner]);
+  useEffect(() => {
       handleGameLogic();
-    }, [p1word, p2word]);
-    
-
+  }, [p1word, p2word]); 
   useEffect(() => {
     socket.on('p2_word', (word) => {
       setP2word((prev) => [...prev, word]);
@@ -146,14 +164,21 @@ const Game = ({roomNumber} : GameProps) => {
               <div className='w-6/12 pl-5'>
                 <h1 className='text-4xl text-center'> You </h1>
                 <ul className='text-xs mt-6 text-left'>
-                {p2wordToDisplay[p2wordToDisplay.length - 1] && <li>{p2wordToDisplay[p2wordToDisplay.length - 1]}</li>}
+                {p2wordToDisplay && p2wordToDisplay.map((word) => { return <li>{word}</li>; })}
+                <li>
+                  <span className="animate-dot1">.</span>
+                  <span className="animate-dot2">.</span>
+                  <span className="animate-dot3">.</span>
+                </li>
                 </ul>
               </div>
 
               <div className='w-6/12 pr-5'>
                 <h1 className='text-4xl text-center'> Me </h1>
                 <ul className='text-xs mt-6 text-right'>
-                  {p1word[p1word.length - 1] && <li>{p1word[p1word.length - 1]}</li>}
+                  {p1wordToDisplay && p1wordToDisplay.map((word) => { return <li>{word}</li>; })}
+                  {p1word.length === 1 ? null : <li>{p1word[p1word.length - 1]}</li>}
+
                 </ul>
               </div>
             </div>
@@ -184,6 +209,7 @@ const Game = ({roomNumber} : GameProps) => {
           
           {startCountdown()}
           {setWinAnim()}
+          {setplayAgain()}
           
           
       </>  

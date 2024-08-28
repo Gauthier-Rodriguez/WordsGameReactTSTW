@@ -57,7 +57,7 @@ const Home = () => {
             ):(
               <>
                 {/* {game ? <Game /> : <NewGame setGame={setGame} />} */}
-                <Room />
+                <Room userName={userName as string}/>
                 
               </>
             )}
