@@ -120,14 +120,6 @@ const Game = ({roomNumber, userName} : GameProps) => {
           setGameWon(true);
           
         } else {
-          
-            if (p1word.length > 1) {
-             const words = [p1word[p1word.length - 2], p1word[p1word.length - 1]]
-             setP1wordToDisplay(words);
-            } else {
-              const words = p1word;
-              setP1wordToDisplay(words);
-            }
           setp2wordToDisplay([p2word[p2word.length - 2], p2word[p2word.length - 1]]);
           setWinner(false);
         }
@@ -144,6 +136,16 @@ const Game = ({roomNumber, userName} : GameProps) => {
   useEffect(() => {
       startCountdown();
   }, [winner]);
+  useEffect(() => {
+    if (p1word.length > 0) {
+      const words = p1word.slice(0, p1word.length - 1);
+
+      setP1wordToDisplay(words);
+     } else {
+       const words = p1word;
+       setP1wordToDisplay(words);
+     }
+  }, [p1word]);
   useEffect(() => {
       handleGameLogic();
   }, [p1word, p2word]); 
@@ -176,8 +178,9 @@ const Game = ({roomNumber, userName} : GameProps) => {
               <div className='w-6/12 pr-5'>
                 <h1 className='text-4xl text-center'> Me </h1>
                 <ul className='text-xs mt-6 text-right'>
-                  {p1wordToDisplay && p1wordToDisplay.map((word) => { return <li>{word}</li>; })}
-                  {p1word.length === 1 ? null : <li>{p1word[p1word.length - 1]}</li>}
+                  {p1wordToDisplay && p1wordToDisplay.map((word) => {
+                    return  <li>{word}</li>; })}
+                  {p1word.length > 0 && <li>{p1word[p1word.length - 1]}</li>}
 
                 </ul>
               </div>
