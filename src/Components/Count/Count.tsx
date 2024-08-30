@@ -39,12 +39,11 @@ const Countdown = () => {
 
   return (
 
-    <div className='absolute top-24 left-0 flex flex-col gap-20 justify-center items-center h-full w-full bg-gray-900 '>
-      <div className='text-white text-center text-sm font-pixel'>{message}</div>
-      <div className='animate-bounce text-white text-9xl font-pixel'>{count}</div>
-      
-
-
+    <div className='absolute h-screen w-screen bg-gray-900 flex items-center justify-center'>
+      <div className='flex flex-col gap-32 items-center'>
+        <div className='text-white text-center text-sm font-pixel'>{message}</div>
+        <div className='animate-bounce text-white text-9xl font-pixel'>{count}</div>
+      </div>
     </div>
   );
 };

@@ -142,8 +142,7 @@ const Game = ({roomNumber, userName} : GameProps) => {
 
       setP1wordToDisplay(words);
      } else {
-       const words = p1word;
-       setP1wordToDisplay(words);
+       setP1wordToDisplay([p1word[p1word.length - 1], p1word[p1word.length - 2]]);
      }
   }, [p1word]);
   useEffect(() => {
@@ -159,10 +158,10 @@ const Game = ({roomNumber, userName} : GameProps) => {
     return (
     
       <>
-         
-          <div className='flex flex-col justify-around h-4/6 font-pixel'> 
+
+          <div className='flex flex-col justify-around font-pixel '> 
             
-            <div className='w-screen flex justify-center gap-10 text-gray-200 fixed inset-x-0 bottom-1/3'>
+            <div className='w-screen flex justify-center gap-10 text-gray-200'>
               <div className='w-6/12 pl-5'>
                 <h1 className='text-4xl text-center'> You </h1>
                 <ul className='text-xs mt-6 text-left'>
@@ -181,7 +180,6 @@ const Game = ({roomNumber, userName} : GameProps) => {
                   {p1wordToDisplay && p1wordToDisplay.map((word) => {
                     return  <li>{word}</li>; })}
                   {p1word.length > 0 && <li>{p1word[p1word.length - 1]}</li>}
-
                 </ul>
               </div>
             </div>
@@ -202,19 +200,15 @@ const Game = ({roomNumber, userName} : GameProps) => {
                 Submit
               </button>
             </form>
-          
-          </div>
-          {errorMessage != '' && 
-            <div className='absolute flex justify-center items-end h-screen w-screen bg-gray-900'>
-              <h1 className='text-white text-center text-xl font-pixel py-32'>{errorMessage}</h1>
-            </div>}
-          
-          
           {startCountdown()}
           {setWinAnim()}
           {setplayAgain()}
           
-          
+          {errorMessage != '' && 
+            <div className='absolute flex justify-center items-center h-screen w-screen bg-gray-900'>
+              <h1 className='text-white text-center text-xl font-pixel'>{errorMessage}</h1>
+            </div>}
+          </div>    
       </>  
     )
    

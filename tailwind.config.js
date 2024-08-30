@@ -6,6 +6,11 @@ export default {
   ],
   theme: {
     extend: {
+      fontSize: {
+        '2xs': '0.5rem',
+        '3xs': '0.25rem',
+        '4xs': '0.1rem',
+      },
       fontFamily: {
         'pixel': ['"Press Start 2P"', 'cursive']
       },
