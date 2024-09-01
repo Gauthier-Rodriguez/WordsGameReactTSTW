@@ -1,48 +1,43 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
-
 interface PlayAgainProps {
   roomNumber: number;
   userName: string;
   togglePlay: Dispatch<SetStateAction<boolean>>;
 }
 
-const PlayAgain = ({roomNumber, userName, togglePlay} : PlayAgainProps) => {
-  const [dontWantToPlay, setDontWantToPlay] = useState<boolean>(false);
-
-  const leaveRoom = async (roomNumber : number) => {
-    const url = `https://wgservernodejs.onrender.com/rooms/leave/${roomNumber}`;
-    console.log('roomNumber:', roomNumber);
-    console.log('userName:', userName);
-    try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({name : userName}),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-    }
-    catch (error) {
-      console.error('Error leaving the room:', error);
+export const leaveRoom = async (roomNumber : number, userName : string) => {
+  const url = `https://wgservernodejs.onrender.com/rooms/leave/${roomNumber}`;
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name : userName}),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
   }
+  catch (error) {
+    console.error('Error leaving the room:', error);
+  }
+}
+
+const PlayAgain = ({roomNumber, userName, togglePlay} : PlayAgainProps) => {
+  const [dontWantToPlay, setDontWantToPlay] = useState<boolean>(false);
 
   const handlePlayAgain = (e: React.MouseEvent<HTMLButtonElement>) => {
     const response = e.currentTarget.value;
     if(response === 'Yes'){
       togglePlay(false);
-     
     }
     else{
-      leaveRoom(roomNumber);
+      leaveRoom(roomNumber, userName);
       setDontWantToPlay(true);
       setTimeout(() => {
         window.location.reload();}, 3000);
-      
       }
   }
 

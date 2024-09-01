@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import Count from '../Count/Count';
 import WinAnim from '../WinAnim/WinAnim';
-import PlayAgain from '../PlayAgain/PlayAgain';
+import PlayAgain, { leaveRoom } from '../PlayAgain/PlayAgain';
 import { useRef } from 'react';
 
 interface GameProps {
@@ -24,6 +24,7 @@ const Game = ({roomNumber, userName} : GameProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [wannaPlay, setWannaPlay] = useState(false);
+  const [rage, setRage] = useState(false)
 
   const joinRoom = () => {
     if (roomNumber !== undefined) {
@@ -126,6 +127,30 @@ const Game = ({roomNumber, userName} : GameProps) => {
       }
   };
 
+  const rageQuit = () => {
+    const handelQuit = () => {
+      leaveRoom(roomNumber, userName)
+      setRage(true)
+      setTimeout(() => {
+        window.location.reload();}, 1000);
+      }
+
+    return (
+      <>
+      {rage ? (
+      <div className='flex justify-center text-xl text-red-700'>
+      <span className="text-xl animate-dot1">.</span>
+      <span className="text-xl animate-dot2">.</span>
+      <span className="text-xl animate-dot3">.</span>
+      </div>
+      ) : (
+      <button className='text-xl text-pixel text-red-700' onClick={() => handelQuit()}>! Rage Quit !</button>
+      )
+    }
+      </>
+    )
+  }
+
   useEffect(() => {
     setplayAgain();
   }, [wannaPlay]);
@@ -154,59 +179,55 @@ const Game = ({roomNumber, userName} : GameProps) => {
   }, [socket]);
 
     return (
-    
       <>
-
-          <div className='flex flex-col justify-around font-pixel '> 
-            
-            <div className='w-screen flex justify-center gap-10 text-gray-200'>
-              <div className='w-6/12 pl-5'>
-                <h1 className='text-4xl text-center'> You </h1>
-                <ul className='text-xs mt-6 text-left'>
-                {p2wordToDisplay && p2wordToDisplay.map((word) => { return <li>{word}</li>; })}
-                <li>
-                  <span className="animate-dot1">.</span>
-                  <span className="animate-dot2">.</span>
-                  <span className="animate-dot3">.</span>
-                </li>
-                </ul>
-              </div>
-
-              <div className='w-6/12 pr-5'>
-                <h1 className='text-4xl text-center'> Me </h1>
-                <ul className='text-xs mt-6 text-right'>
-                  {p1wordToDisplay && p1wordToDisplay.map((word) => {
-                    return  <li>{word}</li>; })}
-                  {p1word.length > 0 && <li>{p1word[p1word.length - 1]}</li>}
-                </ul>
-              </div>
+      
+        <div className='flex flex-col justify-around font-pixel gap-10'> 
+        {rageQuit()}
+          <div className='w-screen flex justify-center gap-10 text-gray-200'>
+            <div className='w-6/12 pl-5'>
+              <h1 className='text-4xl text-center'> You </h1>
+              <ul className='text-xs mt-6 text-left'>
+              {p2wordToDisplay && p2wordToDisplay.map((word) => { return <li>{word}</li>; })}
+              <li>
+                <span className="animate-dot1">.</span>
+                <span className="animate-dot2">.</span>
+                <span className="animate-dot3">.</span>
+              </li>
+              </ul>
             </div>
-
-            <form className='flex flex-col items-center gap-5'>
-              <input type="text"
-              ref={inputRef} 
-              value={word} 
-              placeholder="My word..." 
-              className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:gray-500 font-pixel" required
-              onChange={(e) => {
-                setWord(e.target.value);
-              }}/>
-
-              <button className="hidden py-2.5 px-5 me-2 mb-2 text-2xl font-medium text-gray-900 active:scale-90 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-               onClick={(e) => {submitWord(e)}}
-               type="submit">
-                Submit
-              </button>
-            </form>
-          {startCountdown()}
-          {setWinAnim()}
-          {setplayAgain()}
-          
-          {errorMessage != '' && 
-            <div className='absolute flex justify-center items-center h-screen w-screen bg-gray-900'>
-              <h1 className='text-white text-center text-xl font-pixel'>{errorMessage}</h1>
-            </div>}
-          </div>    
+            <div className='w-6/12 pr-5'>
+              <h1 className='text-4xl text-center'> Me </h1>
+              <ul className='text-xs mt-6 text-right'>
+                {p1wordToDisplay && p1wordToDisplay.map((word) => {
+                  return  <li>{word}</li>; })}
+                {p1word.length > 0 && <li>{p1word[p1word.length - 1]}</li>}
+              </ul>
+            </div>
+          </div>
+          <form className='flex flex-col items-center gap-5'>
+            <input type="text"
+            ref={inputRef} 
+            value={word} 
+            placeholder="My word..." 
+            className="fixed bottom-5 bg-gray-50 border border-gray-300 text-gray-900 text-xl rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:gray-500 font-pixel" required
+            onChange={(e) => {
+              setWord(e.target.value);
+            }}/>
+            <button className="hidden py-2.5 px-5 me-2 mb-2 text-2xl font-medium text-gray-900 active:scale-90 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+             onClick={(e) => {submitWord(e)}}
+             type="submit">
+              Submit
+            </button>
+          </form>
+        {startCountdown()}
+        {setWinAnim()}
+        {setplayAgain()}
+        
+        {errorMessage != '' && 
+          <div className='absolute flex justify-center items-center h-screen w-screen bg-gray-900'>
+            <h1 className='text-white text-center text-xl font-pixel'>{errorMessage}</h1>
+          </div>}
+        </div>    
       </>  
     )
    
