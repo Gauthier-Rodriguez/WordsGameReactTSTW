@@ -20,8 +20,8 @@
   - ~If yes, return to the game~
   - ~If no, return to home~
 - Fix word list display
-- Handle "no" response for new game
-- Media queries
+- ~Handle "no" response for new game~
+- ~Media queries~
 - Limit CORS
 
 ### Possible Improvements:

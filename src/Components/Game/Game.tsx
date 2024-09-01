@@ -138,11 +138,9 @@ const Game = ({roomNumber, userName} : GameProps) => {
   }, [winner]);
   useEffect(() => {
     if (p1word.length > 0) {
-      const words = p1word.slice(0, p1word.length - 1);
-
-      setP1wordToDisplay(words);
+      setP1wordToDisplay([p1word[p1word.length - 1], p1word[p1word.length - 2]]);
      } else {
-       setP1wordToDisplay([p1word[p1word.length - 1], p1word[p1word.length - 2]]);
+       setP1wordToDisplay(p1word)
      }
   }, [p1word]);
   useEffect(() => {
